@@ -25,7 +25,9 @@ def send(p, delim, code):
 
 def test_cli():
     p = subprocess.Popen([sys.executable, "-m", "conkernel.cli"], bufsize=0, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    delim = _readline(p, 60).rstrip("\n")  # first line printed is the session delimiter
+    assert _readline(p, 60) == "please wait, loading...\n"  # clikernel-style loading banner precedes the delimiter
+    assert _readline(p) == "loading complete. first delimiter:\n"
+    delim = _readline(p).rstrip("\n")
     assert delim.startswith("--") and len(delim) == 7
 
     assert send(p, delim, "40+2") == "42\n"
@@ -80,7 +82,9 @@ def test_cli_tty():
         buf = bytearray(rest)
         return line + b"\n"
     try:
-        first = readline(60)
+        assert readline(60) == b"please wait, loading...\n"  # banner printed after ONLCR clear: bare LF, no CR
+        assert readline() == b"loading complete. first delimiter:\n"
+        first = readline()
         assert b"\r" not in first
         delim = first.decode().rstrip("\n")
         assert delim.startswith("--") and len(delim) == 7

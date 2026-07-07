@@ -54,10 +54,13 @@ async def _read_block(delim):
 
 
 async def _serve(kernel):
+    # Both lines print after main's ONLCR clear, so they stay bare LF.
+    print("please wait, loading...", flush=True)
     async with Session(kernel) as s:
         delim = _new_delim()
         # SIGINT means 'interrupt the running code'; an idle kernel just ignores it
         asyncio.get_running_loop().add_signal_handler(signal.SIGINT, lambda: asyncio.ensure_future(s.interrupt()))
+        print("loading complete. first delimiter:", flush=True)
         _write_response(delim)
         while True:
             line = await _readline()
@@ -80,7 +83,7 @@ async def _serve(kernel):
 
 @call_parse
 async def main(kernel:str=None):  # Kernel server module to launch (default: XDG config, else ipymini)
-    "The conkernel stdin/stdout worker: read one request per line (or `--` block), answer with rendered outputs. The first line printed is the session delimiter"
+    "The conkernel stdin/stdout worker: read one request per line (or `--` block), answer with rendered outputs. A clikernel-style loading banner precedes the session delimiter that signals readiness"
     # ONLCR off so protocol output stays bare LF; ECHO off (echoed input corrupts the protocol) and ICANON
     # off (canonical mode drops bytes past MAX_CANON with BEL spam; VMIN/VTIME make non-canonical reads
     # return per byte; ISIG stays on so ^C still interrupts)

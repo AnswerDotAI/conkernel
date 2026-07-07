@@ -13,7 +13,7 @@ No kernelspecs. A kernel is just a Python module launchable as `python -m <modul
 
 ## The CLI protocol
 
-clikernel's, minus the startup banner (the kernel runs in its own process here, so our stdout is protocol-pure): the first line printed is the random per-session delimiter, signalling readiness. Then one line per request (or a `--` block for multiline code, terminated by the delimiter), a `.` acknowledgement before execution, rendered outputs, then the delimiter. `exit()` or `quit()` on its own line stops the worker. SIGINT interrupts the running code -- state survives, and an idle kernel ignores it.
+clikernel's, including its loading banner: `please wait, loading...`, then `loading complete. first delimiter:`, then the random per-session delimiter signalling readiness (launching the kernel process can take a moment, so the banner reports progress before the delimiter arrives). Then one line per request (or a `--` block for multiline code, terminated by the delimiter), a `.` acknowledgement before execution, rendered outputs, then the delimiter. `exit()` or `quit()` on its own line stops the worker. SIGINT interrupts the running code -- state survives, and an idle kernel ignores it.
 
 ## Development
 
