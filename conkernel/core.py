@@ -1,11 +1,11 @@
 "Persistent Jupyter kernel session: the shared core under conkernel's CLI and MCP frontends."
 import asyncio, sys
 from fastcore.utils import *
-from fastcore.nbio import render_text
+from fastcore.nbio import render_text, msgs2outs
 from fastcore.ansi import strip_ansi
 from fastcore.xdg import xdg_config_home
 from conkernelclient import ConKernelManager, DeadKernelError
-from conkernelclient.ops import nb_outputs, parent_id, reconnect
+from conkernelclient.ops import parent_id, reconnect
 from jupyter_client.kernelspec import KernelSpec
 
 DEFAULT_KERNEL = 'ipymini'
@@ -51,7 +51,7 @@ class Session:
                     raise DeadKernelError('kernel died while executing')
             msgs = await self.kc.iopub_drain(parent_id(t.result()))
         finally: self.busy -= 1
-        return strip_ansi(render_text(nb_outputs(msgs)))
+        return strip_ansi(render_text(msgs2outs(msgs)))
 
     async def eval(self, expr, **kw):
         "Value of `expr` in the kernel (see conkernelclient's `eval_expr`)"
