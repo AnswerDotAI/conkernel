@@ -1,3 +1,5 @@
+**ARCHIVED**: clikernel itself now has the features of conkernel.
+
 # conkernel
 
 `conkernel` gives an LLM agent a persistent, real Jupyter kernel: send code, wait for the result, read concise text, and keep the Python state. It is the sibling of [clikernel](https://github.com/AnswerDotAI/clikernel), which wraps a tiny in-process shell; `conkernel` runs a full kernel (ipymini by default) in its own process, driven through [conkernelclient](https://github.com/AnswerDotAI/conkernelclient), so interrupt and restart are real protocol operations and the kernel process is fully isolated from the server.
