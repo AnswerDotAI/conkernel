@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "fastcore>=2.1.17",
+  "fastcore>=2.2.2",
   "conkernelclient>=0.0.13",
   "mcp",
 ]
